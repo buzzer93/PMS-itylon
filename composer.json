@@ -1,0 +1,23 @@
+{
+    "name": "nclsr/dev",
+    "authors": [
+        {
+            "name": "buzzer93",
+            "email": "ncls.rodriguez38@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+        "require": {
+            "phpoffice/phpspreadsheet": "^2.0"
+        },
+        "config": {
+            "platform": {
+                "php": "8.0"
+            }
+        }
+    
+}

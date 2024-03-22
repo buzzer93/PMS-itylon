@@ -1,0 +1,657 @@
+/****************REF************/
+:root {
+    --header-height: 3.5rem;
+
+    --background-color: hsla(220, 37%, 97%, 1);
+    --section-color: hsla(0, 0%, 100%, 1);
+    --orange-color: hsla(18, 99%, 70%, 1);
+    --green-color: hsla(159, 90%, 40%, 1);
+    --red-color: hsla(353, 99%, 68%, 1);
+    --bleu-color: hsla(181, 99%, 34%, 1);
+
+    --menu-color: hsla(218, 23%, 33%, 1);
+    --text-white-color: hsla(0, 0%, 100%, 1);
+
+
+    --grey-text-color: hsla(210, 9%, 60%, 1);
+    --menu-text-color: hsla(0, 0%, 86%, 1);
+    --black-text-color: hsla(0, 0%, 0%, 1);
+
+    --first-color: var(--green-color);
+    --title-color: var(--bleu-color);
+
+    /* Une indication de couleur : un dégradé allant de
+   gauche à droite, commençant en rouge atteignant la
+   couleur intermédiaire à 10% de la longueur du
+   dégradé et prenant les 90% restant pour passer
+   au bleu. */
+    /* 
+    linear-gradient(.25turn, red, 50%, blue); */
+
+    /*========== Font and typography ==========*/
+    /*.5rem = 8px | 1rem = 16px ...*/
+    --body-font: "Poppins", sans-serif;
+    --biggest-font-size: 2rem;
+    --bigger-font-size: 1.25rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+    --smaller-font-size: .75rem;
+
+    /*========== Font weight ==========*/
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semi-bold: 600;
+
+    /*========== z index ==========*/
+    --z-tooltip: 10;
+    --z-fixed: 100;
+}
+
+/*========== Responsive typography ==========*/
+@media screen and (min-width: 1152px) {
+    :root {
+        --biggest-font-size: 3rem;
+        --bigger-font-size: 2rem;
+        --h1-font-size: 2.25rem;
+        --h2-font-size: 1.5rem;
+        --h3-font-size: 1.25rem;
+        --normal-font-size: 1rem;
+        --small-font-size: .875rem;
+        --smaller-font-size: .813rem;
+    }
+}
+
+/*=============== BASE ===============*/
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+input,
+textarea,
+button,
+body {
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--grey-text-color);
+}
+
+input,
+textarea,
+button {
+    outline: none;
+    border: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-weight: var(--font-medium);
+    margin: 0.5rem;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/*=============== REUSABLE CSS CLASSES ===============*/
+.container {
+    max-width: 1120px;
+    margin-inline: 1.5rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.section {
+    padding-block: 5rem 2rem;
+}
+
+.section-title,
+.section-subtitle {
+    text-align: center;
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+}
+
+.section-title {
+    font-size: var(--h1-font-size);
+    margin-bottom: 1.5rem;
+}
+
+.section-subtitle {
+    font-size: var(--small-font-size);
+    margin-bottom: .25rem;
+}
+
+.section-title span,
+.section-subtitle span {
+    color: var(--first-color);
+}
+
+.main {
+    overflow: hidden;
+    /* For animation ScrollReveal */
+}
+
+button {
+    background-color: var(--section-color);
+}
+
+.btn {
+    text-align: center;
+    margin: 0.5rem;
+    color: var(--text-white-color);
+    padding: 0.5rem;
+    border-radius: 50px;
+    background-color: var(--bleu-color);
+}
+
+.btn-red {
+    background-color: var(--red-color);
+
+}
+
+.btn-orange {
+    background-color: var(--orange-color);
+
+}
+
+.btn:hover {
+    cursor: pointer;
+    box-shadow: hsla(18, 99%, 70%, 0.5) 0px 13px 27px 0, rgba(0, 0, 0, 0.1) 0px 8px 16px 0;
+}
+
+/*=============== HEADER & NAV ===============*/
+.header {
+    position: fixed;
+    width: 100%;
+    background-color: var(--menu-color);
+    top: 0;
+    left: 0;
+    z-index: var(--z-fixed);
+}
+
+.nav {
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.nav-logo {
+    color: var(--title-color);
+    font-weight: var(--font-medium);
+}
+
+.nav-logo span {
+    color: var(--first-color);
+}
+
+.nav-toggle,
+.nav-close {
+    display: flex;
+    font-size: 1.25rem;
+    color: var(--menu-text-color);
+    cursor: pointer;
+}
+
+/* Navigation for mobile devices */
+@media screen and (max-width: 1023px) {
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        background-color: hsla(0, 0%, 10%, 0.3);
+        width: 75%;
+        height: 100%;
+        padding: 4.5rem 0 0 3rem;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        /*for safari*/
+        transition: right 0.3s;
+    }
+}
+
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 3rem;
+}
+
+.nav-link {
+    color: var(--text-white-color);
+    font-weight: var(--font-medium);
+    transition: color 0.3s;
+
+}
+
+.nav-link:hover {
+    color: var(--orange-color);
+}
+
+.nav-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+/* Show menu */
+.show-menu {
+    right: 0;
+}
+
+/* Add blur to header */
+.blur-header {
+    background-color: transparent;
+}
+
+.blur-header::after {
+    content: '';
+    position: absolute;
+    width: 1000%;
+    height: 100%;
+    background-color: hsla(0, 0%, 10%, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    /*for safary*/
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* Active link */
+.active {
+    color: var(--first-color);
+}
+
+/*************************INDEX**************************/
+.top-div {
+    padding-top: 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn.modal-btn {
+    align-self: center;
+    justify-self: center;
+}
+
+.modal {
+    display: none;
+}
+
+
+.modal-content {
+    border-radius: 10px;
+    display: flex;
+    margin: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: var(--section-color);
+    box-shadow: hsla(18, 0%, 0%, 0.5) 0px 13px 27px 0, rgba(0, 0, 0, 0.1) 0px 8px 16px 0;
+
+}
+
+.modal-header {
+    display: flex;
+    margin-top: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.modal-body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.btn-close {
+    margin-top: 0;
+
+}
+
+/* .hide-btn{
+    display: none;
+  } */
+.show-modal {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 4rem;
+    left: 10%;
+    z-index: var(--z-tooltip);
+}
+
+.new-res-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 90%;
+    margin-bottom: 1rem;
+}
+
+.form-item {
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.2rem;
+
+}
+
+.form-select {
+    border-radius: 10px;
+    padding: 0.2rem;
+    border: 2px solid var(--first-color);
+    margin: 0.2rem;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 0.2rem;
+    border: 2px solid var(--first-color);
+    margin: 0.2rem;
+}
+label {
+    display: block;
+    font-weight: bold;
+}
+
+.chartCard {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.chartBox {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 0.2rem;
+    margin: 0.2rem;
+    box-shadow: hsla(18, 0%, 0%, 0.5) 0px 13px 27px 0, rgba(0, 0, 0, 0.1) 0px 8px 16px 0;
+    background-color: var(--section-color);
+
+}
+
+.chart-action {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.fa-solid {
+    margin: 0.5rem;
+    overflow: hidden;
+}
+
+.fa-solid:hover {
+    cursor: pointer;
+    background-color: var(--first-color);
+    color: var(--text-white-color);
+}
+
+
+.tarif {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.tarif-img {
+    /* - */
+    border-radius: 10px;
+    margin: 0.2rem;
+    box-shadow: hsla(18, 0%, 0%, 0.5) 0px 13px 27px 0, rgba(0, 0, 0, 0.1) 0px 8px 16px 0;
+    background-color: var(--section-color);
+
+}
+
+
+
+
+/*************************LOGIN**************************/
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+}
+
+.login-form {
+    width: 40%;
+    padding: 1rem;
+    background-color: var(--section-color);
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form input {
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--first-color);
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.alert {
+    margin-bottom: 0.5rem;
+}
+
+/*************************RESERVATION/compta**************************/
+.reservation ,
+.compta {
+    background-color: var(--section-color);
+    color: var(--black-text-color);
+    padding: 1rem;
+    border-radius: 15px;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.compta{
+    margin-top: 4rem;
+}
+.reservation-table,
+.compta-table {
+    padding: 1rem;
+    border-radius: 15px;
+    border: solid 2px var(--first-color);
+    border-spacing: 0;
+    width: 100%;
+}
+.reservation-table th ,
+.compta-table th{
+    padding: 0.5rem 0.3rem;
+}
+
+.reservation-table td,
+.compta-table  td {
+    padding: 0.5rem 0;
+    text-align: center;
+    border-top: 1px solid var(--grey-text-color);
+    border-bottom: 1px solid var(--grey-text-color);
+
+
+}
+
+.reservation-table .td-action {
+    display: grid;
+    grid-template-columns: repeat(3,1fr); 
+}
+
+
+.reservation-table .td-action .btn {
+   margin: 0.1rem 0.2rem;
+}
+
+/*************************GESTION**************************/
+
+.gestion-section {
+    margin: 7rem 1rem;
+    background: var(--section-color);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gestion-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.maison-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.maison-form thead{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.maison-form thead tr{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+.maison-form tbody{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.maison-form tbody tr{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border-bottom: 2px solid var(--grey-text-color);
+}
+.maison-form tbody tr td{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.maison-form .form-control {
+    width: 60px;
+}
+.period-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+/*=============== BREAKPOINTS ===============*/
+/* For small devices */
+@media screen and (max-width: 320px) {}
+
+/* For medium devices */
+@media screen and (min-width: 576px) {}
+
+@media screen and (min-width: 768px) {
+    .nav-menu {
+        width: 55%;
+    }
+
+    .projects-container {
+        grid-template-columns: repeat(2, 352px);
+    }
+
+}
+
+/* For large devices */
+@media screen and (min-width: 1023px) {
+
+    .nav-close,
+    .nav-toggle {
+        display: none;
+    }
+
+    .nav-list {
+        flex-direction: row;
+        column-gap: 3rem;
+    }
+
+    .nav-menu {
+        width: initial;
+    }
+}
+
+@media screen and (min-width: 1152px) {}
