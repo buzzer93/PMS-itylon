@@ -498,8 +498,15 @@ label {
     width: 100%;
 }
 
-.alert {
+.alert-danger {
     margin-bottom: 0.5rem;
+    border: 1px solid var(--red-color);
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: 100%;
+    text-align: center;
+    color: var(--black-text-color);
+    background-color: hsla(353, 99%, 68%, 0.3);;
 }
 
 /*************************RESERVATION/compta**************************/

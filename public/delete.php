@@ -1,12 +1,13 @@
 <?php
 
+use App\App;
 use App\DataBase;
 
 require_once '../vendor/autoload.php';
 
 // Vérifie l'authentification de l'utilisateur
-require_once '../functions/auth.php';
-login();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin');
 
 // Inclusion des fonctions utilitaires
 require_once '../functions/fonction.php';
@@ -15,10 +16,10 @@ require_once './assets/elements/header.php';
 // Traitement de la suppression si le formulaire est soumis
 if (!empty($_POST)) {
     $id = checkInput($_POST['id']);
-    $db = Database::connect();
+    $pdo = Database::connect();
     
     // Préparation de la requête de suppression dans la base de données
-    $statement = $db->prepare("DELETE FROM reservations WHERE id = ?");
+    $statement = $pdo->prepare("DELETE FROM reservations WHERE id = ?");
     $statement->execute(array($id));
     
     // Redirection vers la page principale après suppression

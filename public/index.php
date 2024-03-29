@@ -5,16 +5,17 @@
 
 require_once '../vendor/autoload.php';
 
-
+use App\App;
+use App\Auth;
 use App\DataBase;
 use App\GanttData;
-require_once '../functions/auth.php';
-login();
+
 require_once '../functions/fonction.php';
 
-$db = Database::connect();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin');
 
-
+$pdo = DataBase::connect();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $booking = $_POST['form_booking'];
 
 
-        $stmt = $db->prepare(
+        $stmt = $pdo->prepare(
             "INSERT INTO reservations 
             (nom, prenom, email, tel, maison, arrivee, depart, nb_adulte, nb_mineur, chien, prix, acompte, commentaire, booking) 
             VALUES 
@@ -59,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'booking' => $booking
 
         ])) {
-            throw new RuntimeException($stmt ? $stmt->errorInfo()[2] : $db->errorInfo()[2]);
+            throw new RuntimeException($stmt ? $stmt->errorInfo()[2] : $pdo->errorInfo()[2]);
         }
         header('location: ./index.php');
         exit('exit');
@@ -68,11 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         dump($e->getMessage());
     }
 }
-$stmt_select = $db->prepare("SELECT * FROM reservations");
+$stmt_select = $pdo->prepare("SELECT * FROM reservations");
 $stmt_select->execute();
 $reservations = $stmt_select->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt_maisons= $db->query('SELECT * FROM maisons');
+$stmt_maisons= $pdo->query('SELECT * FROM maisons');
 $maisons= $stmt_maisons->fetchAll(PDO::FETCH_ASSOC);
 
 

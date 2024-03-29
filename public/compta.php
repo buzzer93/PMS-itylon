@@ -1,11 +1,12 @@
 <?php
 
+use App\App;
 use App\DataBase;
 use App\Facture;
 
 require_once '../vendor/autoload.php';
-require_once '../functions/auth.php';
-login();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin');
 require_once '../functions/fonction.php';
 $datetime = new DateTime();
 if (isset($_GET['month_select'])) {
@@ -19,8 +20,8 @@ $startOfMonth = $date_select->modify('first day of this month')->format('Y-m-d')
 // Obtenir la fin du mois
 $endOfMonth = $date_select->modify('last day of this month')->format('Y-m-d');
 
-$db = Database::connect();
-$reservation_select = $db->prepare("SELECT * FROM reservations WHERE (arrivee < :endOfMonth AND arrivee > :startOfMonth) OR (depart < :endOfMonth AND depart > :startOfMonth)");
+$pdo = Database::connect();
+$reservation_select = $pdo->prepare("SELECT * FROM reservations WHERE (arrivee < :endOfMonth AND arrivee > :startOfMonth) OR (depart < :endOfMonth AND depart > :startOfMonth)");
 $reservation_select->execute([':startOfMonth' => $startOfMonth, ':endOfMonth' => $endOfMonth]);
 $reservations = $reservation_select->fetchAll(PDO::FETCH_ASSOC);
 $factures = [];
@@ -33,12 +34,12 @@ $totals = [
 ];
 foreach ($reservations as $reservation) {
     // Récupération des données de la table 'maisons'
-    $maison_select = $db->prepare("SELECT * FROM maisons WHERE name = :name");
+    $maison_select = $pdo->prepare("SELECT * FROM maisons WHERE name = :name");
     $maison_select->execute([':name' => $reservation['maison']]);
     $maison = $maison_select->fetch(PDO::FETCH_ASSOC);
 
     // Récupération des données de la table 'periods'
-    $periods_select = $db->prepare("SELECT * FROM periods WHERE (:arrivee < end_date AND :arrivee > start_date) OR (:depart < end_date AND :depart > start_date)");
+    $periods_select = $pdo->prepare("SELECT * FROM periods WHERE (:arrivee < end_date AND :arrivee > start_date) OR (:depart < end_date AND :depart > start_date)");
     $periods_select->execute([':arrivee' => $reservation['arrivee'], ':depart' => $reservation['depart']]);
     $periods = $periods_select->fetchAll(PDO::FETCH_ASSOC);
     

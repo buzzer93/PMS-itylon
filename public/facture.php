@@ -1,25 +1,27 @@
 <?php
+
+use App\App;
 use App\DataBase;
 use App\Facture;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 require_once '../vendor/autoload.php';
-require_once '../functions/auth.php';
-login();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin','user');
 require_once '../functions/fonction.php';
 
-$db = Database::connect();
-$reservation_select = $db->prepare("SELECT * FROM reservations WHERE id = :id");
+$pdo = Database::connect();
+$reservation_select = $pdo->prepare("SELECT * FROM reservations WHERE id = :id");
 $reservation_select->execute(['id' => $_GET['id']]);
 $reservation = $reservation_select->fetch(PDO::FETCH_ASSOC);
 
 // Récupération des données de la table 'maisons'
-$maison_select = $db->prepare("SELECT * FROM maisons WHERE name = :name");
+$maison_select = $pdo->prepare("SELECT * FROM maisons WHERE name = :name");
 $maison_select->execute([':name' => $reservation['maison']]);
 $maison = $maison_select->fetch(PDO::FETCH_ASSOC);
 
 // Récupération des données de la table 'periods'
-$periods_select = $db->prepare("SELECT * FROM periods WHERE (:arrivee < end_date AND :arrivee > start_date) OR (:depart < end_date AND :depart > start_date)");
+$periods_select = $pdo->prepare("SELECT * FROM periods WHERE (:arrivee < end_date AND :arrivee > start_date) OR (:depart < end_date AND :depart > start_date)");
 $periods_select->execute([':arrivee' => $reservation['arrivee'], ':depart' => $reservation['depart']]);
 $periods = $periods_select->fetchAll(PDO::FETCH_ASSOC);
 

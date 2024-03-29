@@ -1,23 +1,24 @@
 <?php
 
+use App\App;
 use App\DataBase;
 use App\Maison;
 use App\Period;
 use App\Saison;
 
 require_once '../vendor/autoload.php';
-require_once '../functions/auth.php';
 require_once '../functions/fonction.php';
-login();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin');
 
-$db = Database::connect();
-$saisons_select = $db->query("SELECT DISTINCT saison FROM periods");
+$pdo = Database::connect();
+$saisons_select = $pdo->query("SELECT DISTINCT saison FROM periods");
 $saisons = array(); // Tableau qui contiendra la liste des saisons
 $periods_list = array();
 while ($saison = $saisons_select->fetch(PDO::FETCH_ASSOC)) {
 
     // Requête pour récupérer les periods de la saison en cours de traitement
-    $periods_select = $db->prepare('SELECT * FROM periods WHERE saison = :saison');
+    $periods_select = $pdo->prepare('SELECT * FROM periods WHERE saison = :saison');
     $periods_select->bindParam(':saison', $saison['saison']);
     $periods_select->execute();
 
@@ -33,8 +34,8 @@ while ($saison = $saisons_select->fetch(PDO::FETCH_ASSOC)) {
     }
 }
 
-$db = Database::connect();
-$stmt_select = $db->query("SELECT * FROM maisons");
+$pdo = Database::connect();
+$stmt_select = $pdo->query("SELECT * FROM maisons");
 $maisons_data = $stmt_select->fetchAll(PDO::FETCH_ASSOC);
 foreach ($maisons_data as $maison_data) {
     $maison = new Maison(
@@ -61,15 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $end_dates = $_POST['end_date'];
 
         // Se connecter à la base de données
-        $db = Database::connect();
+        $pdo = Database::connect();
         // Parcourir les données du formulaire et mettre à jour la base de données
         for ($i = 0; $i < count($maisons); $i++) {
 
-            $maisons_update = $db->prepare("UPDATE maisons SET basse_saison=?, moyenne_saison=?, haute_saison=?, tres_haute_saison=?, menage=? WHERE name=?");
+            $maisons_update = $pdo->prepare("UPDATE maisons SET basse_saison=?, moyenne_saison=?, haute_saison=?, tres_haute_saison=?, menage=? WHERE name=?");
             $maisons_update->execute([$basseSaisons[$i], $moyenneSaisons[$i], $hauteSaisons[$i], $tresHauteSaisons[$i], $menages[$i], strtolower($maisons[$i]->name)]);
         }
         for ($i = 0; $i < count($periods_names); $i++) {
-            $periods_update = $db->prepare("UPDATE periods SET start_date=?, end_date=? WHERE name=?");
+            $periods_update = $pdo->prepare("UPDATE periods SET start_date=?, end_date=? WHERE name=?");
             $periods_update->execute([$start_dates[$i], $end_dates[$i], $periods_names[$i]]);
         }
     } catch (PDOException $e) {

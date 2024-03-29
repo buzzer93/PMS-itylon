@@ -4,9 +4,6 @@
  * Redirects to the login page after unsetting the variable.
  */
 session_start();
-
-// Unset the 'connected' session variable
-unset($_SESSION['connected']);
-
+session_destroy();
 // Redirect to the login page
 header('Location: /login.php');

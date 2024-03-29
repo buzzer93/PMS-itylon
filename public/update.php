@@ -1,13 +1,14 @@
 <?php
 
+use App\App;
 use App\DataBase;
 
 require_once '../vendor/autoload.php';
-require_once '../functions/auth.php';
-login();
+$user = App::getAuth()->get_user();
+App::getAuth()->requireRole('admin');
 require_once '../functions/fonction.php';
 
-$db = Database::connect();
+$pdo = Database::connect();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-        $stmt = $db->prepare(
+        $stmt = $pdo->prepare(
             "UPDATE reservations SET 
             nom = :nom,
             prenom = :prenom,
@@ -65,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'booking' => $booking,
             'id' => $id
         ])) {
-            throw new RuntimeException($stmt ? $stmt->errorInfo()[2] : $db->errorInfo()[2]);
+            throw new RuntimeException($stmt ? $stmt->errorInfo()[2] : $pdo->errorInfo()[2]);
         }
         // Redirect to index.php after successful update
 
@@ -78,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // Retrieve reservation details for pre-filling the form
-    $reservation_select = $db->prepare(
+    $reservation_select = $pdo->prepare(
         "SELECT * 
      FROM reservations
      WHERE id = :id"
@@ -106,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $booking = $reservation['booking'];
     
 }
-$maisons_query = $db->query("SELECT * FROM maisons");
+$maisons_query = $pdo->query("SELECT * FROM maisons");
 
 while ($maison_select = $maisons_query->fetch(PDO::FETCH_ASSOC)) {
     $maisons_select[] = $maison_select;
